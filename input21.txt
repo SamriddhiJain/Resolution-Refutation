@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+ 	
+<And>
+    <Or>
+        <Atom>
+        <Not>
+            <Rel>Student</Rel>
+            <Var>x</Var>
+        </Not>
+        </Atom>
+        <Atom>
+            <Rel>HardWorker</Rel>
+            <Var>x</Var>
+        </Atom>
+    </Or>
+    <Atom>
+        <Rel>Student</Rel>
+        <Exp>
+            <Fun>sis</Fun>
+            <Ind>Anisha1</Ind>
+        </Exp>
+    </Atom>
+    <Atom>
+        <Rel>S</Rel>
+        <Exp>
+            <Fun>sis</Fun>
+            <Ind>Anisha1</Ind>
+        </Exp>
+    </Atom>
+    <Atom>
+        <Rel>B</Rel>
+        <Exp>
+            <Fun>sis</Fun>
+            <Ind>Anisha12</Ind>
+        </Exp>
+    </Atom>
+</And>
