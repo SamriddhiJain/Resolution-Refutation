@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+     <Or>
+          <Atom>
+            <Not>
+                <Rel>Student</Rel>
+                <Var>x</Var>
+            </Not>
+          </Atom>
+          <Atom>
+            <Rel>HardWorker</Rel>
+            <Var>x</Var>
+          </Atom>
+     </Or>

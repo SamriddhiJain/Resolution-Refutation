@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+ 
+     <And>
+          <Atom>
+            <Rel>S</Rel>
+            <Var>x</Var> 
+          </Atom>
+          <Atom>
+            <Rel>B</Rel>
+            <Var>x</Var>
+          </Atom>
+        </And>
+         
