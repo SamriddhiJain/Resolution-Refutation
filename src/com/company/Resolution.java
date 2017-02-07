@@ -102,6 +102,11 @@ public class Resolution {
 
     }
 
+    /*Resolves the two clauses
+    * Returns true if null clause found or two clauses can be successfully resolved
+    * returns false if clauses can not be resolved.
+    * If true: resoved output in private variable
+    * */
     public boolean resolve(){
         if(checkNull(e1,e2)){//e1 negation of e2
             System.out.println("Null clause found");
@@ -120,7 +125,7 @@ public class Resolution {
                 String key= it.next();
                 Element p = pmap1.get(key);
                 if(nmap2.containsKey(key)){
-                    Element p1 = nmap2.get(key);
+                    Element p1 = nmap2.get(key).clone(); //clone to create a deep copy
                     p1 = p1.setName("Atom"); //Replacing Not with Atom
                     try {
                         System.out.println("Unify!!");
@@ -146,8 +151,8 @@ public class Resolution {
             Iterator<String> it2 = nmap1.keySet().iterator();
             while(it2.hasNext()){
                 String key= it2.next();
-                Element p = nmap1.get(key);
-                p = p.setName("Atom");
+                Element p = nmap1.get(key).clone();
+                p.setName("Atom");
                 if(pmap2.containsKey(key)){
                     Element p1 = pmap2.get(key);
                     try {
@@ -221,9 +226,12 @@ public class Resolution {
 //            System.out.println("Substitute :"+unionList.size());
             /*Substitute each literal*/
             for(int i=0;i<unionList.size();i++){
-                Element e1 = unionList.get(i);
+                Element e1 = unionList.get(i).clone();
                 unionList.set(i,substituteLiteral(e1,mp));
             }
+//            for(int i=0;i<unionList.size();i++){
+//                printElement(unionList.get(i));
+//            }
 
             /*remove positive negative pairs, as they form truth
             * VERIFY LOGIC*/
@@ -240,12 +248,54 @@ public class Resolution {
                 }
             }
 
-            return true;
+            /*If union list is empty: True literal, no new resolvent*/
+            if(unionList.size()==0)
+                return false;
+            else{
+                eResolved = combineLiterals(unionList);
+                System.out.println("Resolved: ");
+                printElement(eResolved);
+
+                return true;
+            }
         }else return false;
     }
 
+    /*Combine non zero number of literals*/
+    private Element combineLiterals(List<Element> unionList) {
+        if(unionList.size()==1)
+            return unionList.get(0);
+        else {
+            Element finalE = new Element("Or");
+            finalE.addContent(unionList);
+            return finalE;
+        }
+    }
+
     private Element substituteLiteral(Element element, HashMap<String, Element> mp) {
-        Element e1 = element;
-        return e1;
+        if(element.getName().equals("Var")){
+            if(mp.containsKey(element.getValue())) {
+                return mp.get(element.getValue());
+            } else
+                return element;
+        } else{
+            List<Element> Children =  element.getChildren();
+            List<Element> newChildren = new ArrayList<>();
+            Element result = element.clone();
+
+            for(int i=0;i<Children.size();++i){
+                newChildren.add(substituteLiteral(Children.get(i),mp).clone());
+            }
+            if(Children.size()!=0)
+                result.setContent(newChildren);
+
+            return result;
+        }
+    }
+
+    private void printElement(Element e){
+        XMLOutputter outp = new XMLOutputter();
+        outp.setFormat(Format.getPrettyFormat());
+        System.out.println(outp.outputString(e));
     }
 }
