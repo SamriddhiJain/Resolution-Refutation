@@ -1,8 +1,21 @@
 <?xml version="1.0"?>
-
+<And>
     <Atom>
         <Not>
-        <Rel>HardWorker</Rel>
-        <Ind>Anisha1</Ind>
+        <Rel>M</Rel>
+        <Ind>A</Ind>
         </Not>
     </Atom>
+    <Or>
+        <Atom>
+                <Not>
+                <Rel>M</Rel>
+                <Ind>B</Ind>
+                </Not>
+        </Atom>
+        <Atom>
+                <Rel>M</Rel>
+                <Ind>A</Ind>
+        </Atom>
+    </Or>
+</And>

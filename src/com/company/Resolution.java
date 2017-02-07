@@ -1,17 +1,13 @@
 package com.company;
 
-import org.jdom2.Attribute;
-import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import java.io.IOException;
 import java.util.*;
 
-import static com.company.Unification.unify;
+import com.company.Unification;
 
 /**
  * Created by riddle on 5/2/17.
@@ -19,9 +15,9 @@ import static com.company.Unification.unify;
 public class Resolution {
 
     private boolean check = false;
-    private static Element e1;
-    private static Element e2;
-    private static Element eResolved = null;
+    private Element e1;
+    private Element e2;
+    private Element eResolved = null;
     /*
     * pmap: hashmap for positive literals: string, <Atom></Atom> tag
     * nmap: hashmap for nagative literals: string, <Not></Not> tag
@@ -31,6 +27,9 @@ public class Resolution {
     private HashMap<String,Element> pmap2 = new HashMap<String,Element>();
     private HashMap<String,Element> nmap2 = new HashMap<String,Element>();
 
+    /*finalHashMap contains all the final substitutions*/
+    public HashMap<String,Element> finalHashMap = new HashMap<>();
+
     public Resolution(Element a, Element b){
         e1 = a;
         e2 = b;
@@ -38,6 +37,10 @@ public class Resolution {
 
     public Element getFinalResolved(){
         return eResolved;
+    }
+
+    public Boolean nullFound(){
+        return check;
     }
 
     /*
@@ -81,16 +84,6 @@ public class Resolution {
             }
         }
 
-//        Iterator<String> it = map1.keySet().iterator();
-//        while(it.hasNext()){
-//            String key= it.next();
-//
-//            Element p= map1.get(key);
-//            System.out.println(key+" "+p.getName());
-//            System.out.println(p.getChildren().size());
-//        }
-
-
         if(b==Boolean.TRUE){
             pmap1 = map1;
             nmap1 = map2;
@@ -106,14 +99,19 @@ public class Resolution {
     * Returns true if null clause found or two clauses can be successfully resolved
     * returns false if clauses can not be resolved.
     * If true: resoved output in private variable
+    * 1. Make hashtables
+    * 2. Unify if needed
+    * 3. Resolve clauses with substitution
     * */
     public boolean resolve(){
+
+        int flag = 0;
+
         if(checkNull(e1,e2)){//e1 negation of e2
             System.out.println("Null clause found");
+            check = true;
             return true;
         }else{
-            /*finalHashMap contains all the final substitutions*/
-            HashMap<String,Element> finalHashMap = new HashMap<>();
 
             /*Construct hashtables for both clauses*/
             this.makeHashTable(Boolean.TRUE);
@@ -123,7 +121,7 @@ public class Resolution {
             Iterator<String> it = pmap1.keySet().iterator();
             while(it.hasNext()){
                 String key= it.next();
-                Element p = pmap1.get(key);
+                Element p = pmap1.get(key).clone();
                 if(nmap2.containsKey(key)){
                     Element p1 = nmap2.get(key).clone(); //clone to create a deep copy
                     p1 = p1.setName("Atom"); //Replacing Not with Atom
@@ -131,7 +129,12 @@ public class Resolution {
                         System.out.println("Unify!!");
 
                         Unification u1 = new Unification();
-                        u1.unify(p,p1);
+
+                        if(checkEquals(p,p1))
+                            flag = 1;
+                        else
+                            u1.unify(p,p1);
+
                         HashMap<String,Element> mp = u1.map;
                         Iterator<String> itF = mp.keySet().iterator();
                         while(itF.hasNext()){
@@ -154,11 +157,16 @@ public class Resolution {
                 Element p = nmap1.get(key).clone();
                 p.setName("Atom");
                 if(pmap2.containsKey(key)){
-                    Element p1 = pmap2.get(key);
+                    Element p1 = pmap2.get(key).clone();
                     try {
                         System.out.println("Unify!!");
                         Unification u1 = new Unification();
-                        u1.unify(p,p1);
+
+                        if(checkEquals(p,p1))
+                            flag = 1;
+                        else
+                            u1.unify(p,p1);
+
                         HashMap<String,Element> mp = u1.map;
                         Iterator<String> itF = mp.keySet().iterator();
                         while(itF.hasNext()){
@@ -176,10 +184,36 @@ public class Resolution {
             }
 
             /*Combine the two clauses if there exists some substitutions*/
-            if(substitute(finalHashMap)) {
-                return true;
+            if(finalHashMap.size()==0){//either no substitutions or no variables
+                if(flag==1){//+- pair, no variables in literals
+                    return resolveWithoutSubstitution();
+                }else
+                    return false;//no substitution and variables
             } else
-                return false;
+                return substitute(finalHashMap);
+        }
+    }
+
+    private boolean checkEquals(Element p, Element p1) {
+        XMLOutputter outp = new XMLOutputter();
+        outp.setFormat(Format.getPrettyFormat());
+
+        return outp.outputString(p).equals(outp.outputString(p1));
+    }
+
+    private Boolean resolveWithoutSubstitution() {
+        /*Combined literals of both the elements*/
+        List<Element> unionList = unionLiterals(e1,e2);
+        List<Element> newList = removePairs(unionList);
+
+        /*If union list is empty: True literal, no new resolvent*/
+        if(newList.size()==0)
+            return false;
+        else{
+            eResolved = combineLiterals(newList); //Combine with Or
+            System.out.println("Resolved: ");
+            printElement(eResolved);
+            return true;
         }
     }
 
@@ -212,66 +246,79 @@ public class Resolution {
     private boolean substitute(HashMap<String, Element> mp) {
         if(mp.keySet().size()!=0) {
             /*Combined literals of both the elements*/
-            List<Element> unionList = new ArrayList<>();
-            if(e1.getName().equals("Or")){
-                unionList.addAll(e1.getChildren());
-            }else
-                unionList.add(e1);
 
-            if(e2.getName().equals("Or")){
-                unionList.addAll(e2.getChildren());
-            }else
-                unionList.add(e2);
+            List<Element> unionList = unionLiterals(e1,e2);
 
-//            System.out.println("Substitute :"+unionList.size());
             /*Substitute each literal*/
             for(int i=0;i<unionList.size();i++){
                 Element e1 = unionList.get(i).clone();
                 unionList.set(i,substituteLiteral(e1,mp));
             }
-//            for(int i=0;i<unionList.size();i++){
-//                printElement(unionList.get(i));
-//            }
 
-            /*remove positive negative pairs, as they form truth
-            * VERIFY LOGIC*/
-            for (int i=0;i<unionList.size()-1;i++){
-                Element e1 = unionList.get(i);
-                for(int j=i+1;j<unionList.size();j++){
-                    Element e2 = unionList.get(j);
-                    if(checkNull(e1,e2)){
-                        unionList.remove(e1);
-                        unionList.remove(e2);
-                        i -= 1;
-                        break;
-                    }
-                }
-            }
+            List<Element> newList = removePairs(unionList);
 
             /*If union list is empty: True literal, no new resolvent*/
-            if(unionList.size()==0)
+            if(newList.size()==0)
                 return false;
             else{
-                eResolved = combineLiterals(unionList);
+                eResolved = combineLiterals(newList); //Combine with Or
                 System.out.println("Resolved: ");
                 printElement(eResolved);
-
                 return true;
             }
         }else return false;
     }
 
-    /*Combine non zero number of literals*/
+    private List<Element> unionLiterals(Element e1, Element e2) {
+        List<Element> unionList = new ArrayList<>();
+        if(e1.getName().equals("Or")){
+            unionList.addAll(e1.getChildren());
+        }else
+            unionList.add(e1);
+
+        if(e2.getName().equals("Or")){
+            unionList.addAll(e2.getChildren());
+        }else
+            unionList.add(e2);
+
+        return unionList;
+    }
+
+    private List<Element> removePairs(List<Element> unionList) {
+        /*remove positive negative pairs, as they form truth
+            * VERIFY LOGIC*/
+        for (int i=0;i<unionList.size()-1;i++){
+            Element e1 = unionList.get(i);
+            for(int j=i+1;j<unionList.size();j++){
+                Element e2 = unionList.get(j);
+                if(checkNull(e1,e2)){
+                    unionList.remove(e1);
+                    unionList.remove(e2);
+                    i -= 1;
+                    break;
+                }
+            }
+        }
+
+        return unionList;
+    }
+
+    /*Combine non zero number of literals with Or*/
     private Element combineLiterals(List<Element> unionList) {
         if(unionList.size()==1)
             return unionList.get(0);
         else {
             Element finalE = new Element("Or");
-            finalE.addContent(unionList);
+            List<Element> newL = new ArrayList<>();
+            for(int i=0;i<unionList.size();i++){
+                newL.add(unionList.get(i).clone());
+            }
+            finalE.setContent(newL);
             return finalE;
         }
     }
 
+    /*Substitute variables with values*/
     private Element substituteLiteral(Element element, HashMap<String, Element> mp) {
         if(element.getName().equals("Var")){
             if(mp.containsKey(element.getValue())) {
@@ -283,11 +330,14 @@ public class Resolution {
             List<Element> newChildren = new ArrayList<>();
             Element result = element.clone();
 
-            for(int i=0;i<Children.size();++i){
+            for(int i=0;i<Children.size();i++){
                 newChildren.add(substituteLiteral(Children.get(i),mp).clone());
             }
-            if(Children.size()!=0)
+            if(Children.size()!=0) {
                 result.setContent(newChildren);
+//                printElement(result);
+//                System.out.println();
+            }
 
             return result;
         }

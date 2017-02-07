@@ -9,14 +9,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static com.company.Unification.unification;
 import com.company.KB;
 
 public class Main {
 
     public static void main(String[] args) throws JDOMException, IOException {
 
-        File inputFile = new File("ManSoc.txt");
+        File inputFile = new File("blocks.txt");
         SAXBuilder saxBuilder = new SAXBuilder();
         Document document = saxBuilder.build(inputFile);
         Element root = document.getRootElement();
@@ -25,8 +24,14 @@ public class Main {
         List<Element> l1 = newKB.readKB(root);
         System.out.println(l1.size());
 
-        Resolution res = new Resolution(l1.get(0),l1.get(1));
-        res.resolve();
+//        Resolution res = new Resolution(l1.get(1),l1.get(0));
+//        System.out.println(res.resolve());
+//
+        Resolution res1 = new Resolution(l1.get(4),l1.get(1));
+        System.out.println(res1.resolve());
+
+        ResStrategies str = new ResStrategies();
+        str.forwardChaining(l1);
 
     }
 }

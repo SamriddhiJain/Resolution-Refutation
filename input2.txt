@@ -1,13 +1,27 @@
 <?xml version="1.0"?>
- 
-     <And>
-          <Atom>
-            <Rel>S</Rel>
-            <Var>x</Var> 
-          </Atom>
-          <Atom>
-            <Rel>B</Rel>
-            <Var>x</Var>
-          </Atom>
-        </And>
-         
+<And>
+    <Atom>
+        <Rel>M</Rel>
+        <Ind>C</Ind>
+    </Atom>
+    <Or>
+        <Atom>
+            <Not>
+                <Rel>On</Rel>
+                <Ind>A</Ind>
+                <Ind>C</Ind>
+            </Not>
+        </Atom>
+        <Atom>
+           <Rel>On</Rel>
+           <Ind>B</Ind>
+           <Ind>C</Ind>
+         </Atom>
+        <Atom>
+        <Not>
+            <Rel>M</Rel>
+            <Var>C</Var>
+            </Not>
+        </Atom>
+    </Or>
+</And>

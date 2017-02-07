@@ -28,9 +28,9 @@ public class Unification {
      * fail- to keep track of failure
      * map - for mapping corresponding substitutions
      */
-    public static  Element result = new Element ("Substitution");
-    public static boolean fail= false;
-    public static HashMap<String,Element> map = new HashMap<String,Element>();
+    public Element result = new Element ("Substitution");
+    public boolean fail= false;
+    public HashMap<String,Element> map = new HashMap<String,Element>();
 
 
     /**
@@ -61,7 +61,7 @@ public class Unification {
      * @throws IOException
      *
      */
-    public static void unify(Element pat1, Element pat2) throws IOException{
+    public void unify(Element pat1, Element pat2) throws IOException{
 //		 System.out.println("-------------------------------");
 //		 pat1.detach();
 //		printResult(pat1);
@@ -157,7 +157,7 @@ public class Unification {
      * unification- takes two files names(full path of file should be passed) , parses it and calls the unify method.
      * if you have two documents already parsed in memory, you can use unify method directly
      */
-    public static void unification(String filename1, String filename2){
+    public void unification(String filename1, String filename2){
         try{
             File inputFile = new File(filename1);
             SAXBuilder saxBuilder = new SAXBuilder();
@@ -188,7 +188,7 @@ public class Unification {
      * @throws IOException
      */
 
-    public static void computeResult() throws IOException{
+    public void computeResult() throws IOException{
         if(fail)
             System.out.println("Failed");
         else{
@@ -212,7 +212,7 @@ public class Unification {
     /**
      * printResult - prints result in xml format, only for debugging purpose.
      */
-    public static void printResult() throws IOException{
+    public void printResult() throws IOException{
         Document doc = new Document(result);
         XMLOutputter xmlOutput = new XMLOutputter();
 
