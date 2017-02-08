@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) throws JDOMException, IOException {
 
 
-        File inputFile = new File("dogEx.txt");
+        File inputFile = new File("blocks.txt");
         SAXBuilder saxBuilder = new SAXBuilder();
         Document document = saxBuilder.build(inputFile);
         Element root = document.getRootElement();
@@ -33,8 +33,13 @@ public class Main {
 //        Resolution res1 = new Resolution(l1.get(4),l1.get(1));
 //        System.out.println(res1.resolve());
 //
+        Element e = l1.get(l1.size()-1).clone();
+        l1.remove(l1.size()-1);
         ResStrategies str = new ResStrategies();
-        str.forwardChaining(l1);
+        str.setOfSupportStrategy(l1,e);
+
+//        ResStrategies str = new ResStrategies();
+//        str.unitResolution(l1);
 
     }
 }

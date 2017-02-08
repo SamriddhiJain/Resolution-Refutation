@@ -23,6 +23,7 @@ public class ResStrategies {
                 Resolution res = new Resolution(kb.get(i).clone(), kb.get(j).clone());
                 if(res.resolve()){
                     if(res.nullFound()){
+                        System.out.println(l1.size() + " new clauses");
                         return;
                     }else{
                         Element e = res.getFinalResolved();
@@ -48,6 +49,7 @@ public class ResStrategies {
                     Resolution res = new Resolution(kb.get(i).clone(), l1.get(j).clone());
                     if(res.resolve()){
                         if(res.nullFound()){
+                            System.out.println(l2.size() + " new clauses");
                             return;
                         }else{
                             Element e = res.getFinalResolved();
@@ -76,4 +78,50 @@ public class ResStrategies {
             }
         }
     }
+
+    /*One of the resolvents is always in negated goal set or its derivative*/
+    public void setOfSupportStrategy(List<Element> kb,Element g){
+        List<Element> negatedGoal = new ArrayList<>();
+        List<Element> goalDerivatives = new ArrayList<>();
+        negatedGoal.add(g.clone());
+        goalDerivatives.add(g.clone());
+
+        List<Element> l1 = new ArrayList<>();
+        while (true) {
+            for (int i = 0; i < kb.size(); i++) {
+                for (int j = 0; j < negatedGoal.size(); j++) {
+                    Resolution res = new Resolution(kb.get(i).clone(), negatedGoal.get(j).clone());
+                    if (res.resolve()) {
+                        if (res.nullFound()) {
+                            System.out.println(l1.size() + " new clauses");
+                            return;
+                        } else {
+                            Element e = res.getFinalResolved();
+                            if (!kb.contains(e) && !goalDerivatives.contains(e)){
+                                l1.add(e);
+                                goalDerivatives.add(e);
+                            }
+                        }
+                    }
+                }
+            }
+
+            System.out.println(l1.size() + " new clauses");
+            if(l1.size()==0){
+                System.out.println("Can't predict");
+                return;
+            }else {
+                for(int i=0;i<negatedGoal.size();i++){
+                    kb.add(negatedGoal.get(i).clone());
+                }
+
+                negatedGoal = new ArrayList<>();
+                for(int i=0;i<l1.size();i++){
+                    negatedGoal.add(l1.get(i).clone());
+                }
+                l1 = new ArrayList<>();
+            }
+        }
+    }
+
 }

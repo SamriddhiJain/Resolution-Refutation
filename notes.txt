@@ -1,12 +1,12 @@
 Input file template:
-AND
-    OR
-        ATOM
-
-1. AND tag : Multiple clauses
-2. No AND tag : Single Clause
 
 Root: getName()
 1. AND : Multiple clauses
 2. OR : Single clause
 3. ATOM : Single Literal
+
+KBs:
+ManSoc.txt
+blocks.txt
+plus.txt
+dogEx.txt
