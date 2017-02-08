@@ -1,14 +1,33 @@
 <?xml version="1.0"?>
-
-     <Or>
-          <Atom>
-            <Not>
-                <Rel>Student</Rel>
-                <Var>x</Var>
-            </Not>
-          </Atom>
-          <Atom>
-            <Rel>HardWorker</Rel>
+<And>
+ <Or>
+      <Atom>
+        <Not>
+            <Rel>P</Rel>
             <Var>x</Var>
-          </Atom>
-     </Or>
+        </Not>
+      </Atom>
+      <Atom>
+        <Rel>R</Rel>
+        <Var>x</Var>
+      </Atom>
+ </Or>
+ <Or>
+       <Atom>
+         <Not>
+             <Rel>R</Rel>
+             <Ind>Ann</Ind>
+         </Not>
+       </Atom>
+       <Atom>
+               <Not>
+                   <Rel>S</Rel>
+                   <Var>x</Var>
+               </Not>
+             </Atom>
+       <Atom>
+         <Rel>T</Rel>
+         <Var>x</Var>
+       </Atom>
+  </Or>
+  </And>
