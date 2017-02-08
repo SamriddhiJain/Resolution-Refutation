@@ -42,7 +42,7 @@ public class ResStrategies {
 //        writer.println(outp.outputString(l1));
 
         List<Element> l2 = new ArrayList<>();
-        while(true){
+        while (true){
             for(int i=0;i<kb.size();i++){
                 for(int j=0;j<l1.size();j++) {
                     Resolution res = new Resolution(kb.get(i).clone(), l1.get(j).clone());

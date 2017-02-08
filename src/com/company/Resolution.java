@@ -126,7 +126,7 @@ public class Resolution {
                     Element p1 = nmap2.get(key).clone(); //clone to create a deep copy
                     p1 = p1.setName("Atom"); //Replacing Not with Atom
                     try {
-                        System.out.println("Unify!!");
+//                        System.out.println("Unify!!");
 
                         Unification u1 = new Unification();
 
@@ -137,7 +137,7 @@ public class Resolution {
 
                         if(!u1.fail){//unification not failed
                             HashMap<String,Element> mp = u1.map;
-                            System.out.println(mp.toString());
+//                            System.out.println(mp.toString());
                             Iterator<String> itF = mp.keySet().iterator();
                             while(itF.hasNext()){
                                 String key2= itF.next();
@@ -162,7 +162,7 @@ public class Resolution {
                 if(pmap2.containsKey(key)){
                     Element p1 = pmap2.get(key).clone();
                     try {
-                        System.out.println("Unify!!");
+//                        System.out.println("Unify!!");
                         Unification u1 = new Unification();
 
                         if(checkEquals(p,p1))
@@ -172,7 +172,7 @@ public class Resolution {
 
                         if(!u1.fail) {//unification not failed
                             HashMap<String, Element> mp = u1.map;
-                            System.out.println(mp.toString());
+//                            System.out.println(mp.toString());
                             Iterator<String> itF = mp.keySet().iterator();
                             while (itF.hasNext()) {
                                 String key2 = itF.next();
@@ -248,24 +248,32 @@ public class Resolution {
     * Algo: 1. Take union of all literals/atoms
     * 2. Substitute each
     * 3. Check if any pair leads to null clause: just remove them
+    *
+    * Returns true if null clause or some new clause to be added.
     * */
     private boolean substitute(HashMap<String, Element> mp) {
         if(mp.keySet().size()!=0) {
             /*Combined literals of both the elements*/
 
             List<Element> unionList = unionLiterals(e1,e2);
+            int a = unionList.size();
 
             /*Substitute each literal*/
-            for(int i=0;i<unionList.size();i++){
+            for(int i=0;i<a;i++){
                 Element e1 = unionList.get(i).clone();
                 unionList.set(i,substituteLiteral(e1,mp));
             }
 
             List<Element> newList = removePairs(unionList);
-
-            /*If union list is empty: True literal, no new resolvent*/
-            if(newList.size()==0)
+            /*If union list is empty: True/False literal, no new resolvent*/
+            if(newList.size()==0){
+                if(a==2){
+                    System.out.println("Null clause found");
+                    check = true;
+                    return true;
+                }
                 return false;
+            }
             else{
                 eResolved = combineLiterals(newList); //Combine with Or
                 System.out.println("Resolved: ");
