@@ -1,35 +1,5 @@
 <?xml version="1.0"?>
-<And>
-    <Atom>
-        <Rel>Plus</Rel>
-        <Ind>0</Ind>
-        <Var>x</Var>
-        <Var>x</Var>
-    </Atom>
-    <Or>
-        <Atom>
-            <Not>
-                <Rel>Plus</Rel>
-                <Var>x</Var>
-                <Var>y</Var>
-                <Var>z</Var>
-            </Not>
-        </Atom>
-        <Atom>
-           <Rel>Plus</Rel>
-           <Exp>
-               <Fun>s</Fun>
-               <Var>x</Var>
-           </Exp>
-           <Var>y</Var>
-           <Exp>
-               <Fun>s</Fun>
-               <Var>z</Var>
-          </Exp>
-         </Atom>
-    </Or>
-    <Atom>
-        <Not>
+<Atom>
             <Rel>Plus</Rel>
             <Exp>
                <Fun>s</Fun>
@@ -64,6 +34,4 @@
                     </Exp>
                 </Exp>
             </Exp>
-        </Not>
     </Atom>
-</And>

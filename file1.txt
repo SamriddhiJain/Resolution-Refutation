@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Atom>
+        <Rel>Plus</Rel>
+        <Ind>0</Ind>
+        <Var>x</Var>
+        <Var>x</Var>
+    </Atom>
