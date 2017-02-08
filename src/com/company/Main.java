@@ -16,14 +16,13 @@ public class Main {
     public static void main(String[] args) throws JDOMException, IOException {
 
 
-        File inputFile = new File("blocks.txt");
+        File inputFile = new File("dogEx.txt");
         SAXBuilder saxBuilder = new SAXBuilder();
         Document document = saxBuilder.build(inputFile);
         Element root = document.getRootElement();
 
         KB newKB = new KB();
         List<Element> l1 = newKB.readKB(root);
-        System.out.println(l1.size());
 
 //        Resolution res = new Resolution(l1.get(0),l1.get(2));
 //        System.out.println(res.resolve());
