@@ -23,7 +23,6 @@ public class Main {
 
         KB newKB = new KB();
         List<Element> l1 = newKB.readKB(root);
-        System.out.println(l1.size());
 
 //        Resolution res = new Resolution(l1.get(0),l1.get(2));
 //        System.out.println(res.resolve());
@@ -34,8 +33,13 @@ public class Main {
 //        Resolution res1 = new Resolution(l1.get(4),l1.get(1));
 //        System.out.println(res1.resolve());
 //
+//        Element e = l1.get(l1.size()-1).clone();
+//        l1.remove(l1.size()-1);
+//        ResStrategies str = new ResStrategies();
+//        str.setOfSupportStrategy(l1,e);
+
         ResStrategies str = new ResStrategies();
-        str.forwardChaining(l1);
+        str.unitResolution(l1);
 
     }
 }

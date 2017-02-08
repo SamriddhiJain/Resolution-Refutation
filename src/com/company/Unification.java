@@ -89,7 +89,7 @@ public class Unification {
                 return;
             else{
                 map.put(pat1.getText(),pat2);
-                System.out.println(pat2.getChildren().size());
+//                System.out.println(pat2.getChildren().size());
                 //printResult(pat2);
                 pat1.detach();
 

@@ -144,7 +144,7 @@ public class Resolution {
                                 if(!finalHashMap.containsKey(key2)){
                                     Element keyElement = mp.get(key2);
                                     finalHashMap.put(key2,keyElement);
-                                    System.out.println("Key added: "+key2+" : "+keyElement.getValue());
+//                                    System.out.println("Key added: "+key2+" : "+keyElement.getValue());
                                 }
                             }
                         }
@@ -179,7 +179,7 @@ public class Resolution {
                                 if (!finalHashMap.containsKey(key2)) {
                                     Element keyElement = mp.get(key2);
                                     finalHashMap.put(key2, keyElement);
-                                    System.out.println("Key added: " + key2 + " : " + keyElement.getValue());
+//                                    System.out.println("Key added: " + key2 + " : " + keyElement.getValue());
                                 }
                             }
                         }
@@ -217,8 +217,8 @@ public class Resolution {
             return false;
         else{
             eResolved = combineLiterals(newList); //Combine with Or
-            System.out.println("Resolved: ");
-            printElement(eResolved);
+//            System.out.println("Resolved: ");
+//            printElement(eResolved);
             return true;
         }
     }
@@ -276,8 +276,8 @@ public class Resolution {
             }
             else{
                 eResolved = combineLiterals(newList); //Combine with Or
-                System.out.println("Resolved: ");
-                printElement(eResolved);
+//                System.out.println("Resolved: ");
+//                printElement(eResolved);
                 return true;
             }
         }else return false;
