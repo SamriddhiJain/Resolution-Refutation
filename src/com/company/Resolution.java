@@ -135,14 +135,17 @@ public class Resolution {
                         else
                             u1.unify(p,p1);
 
-                        HashMap<String,Element> mp = u1.map;
-                        Iterator<String> itF = mp.keySet().iterator();
-                        while(itF.hasNext()){
-                            String key2= itF.next();
-                            if(!finalHashMap.containsKey(key2)){
-                                Element keyElement = mp.get(key2);
-                                finalHashMap.put(key2,keyElement);
-                                System.out.println("Key added: "+key2+" : "+keyElement.getValue());
+                        if(!u1.fail){//unification not failed
+                            HashMap<String,Element> mp = u1.map;
+                            System.out.println(mp.toString());
+                            Iterator<String> itF = mp.keySet().iterator();
+                            while(itF.hasNext()){
+                                String key2= itF.next();
+                                if(!finalHashMap.containsKey(key2)){
+                                    Element keyElement = mp.get(key2);
+                                    finalHashMap.put(key2,keyElement);
+                                    System.out.println("Key added: "+key2+" : "+keyElement.getValue());
+                                }
                             }
                         }
                     } catch (IOException e) {
@@ -167,14 +170,17 @@ public class Resolution {
                         else
                             u1.unify(p,p1);
 
-                        HashMap<String,Element> mp = u1.map;
-                        Iterator<String> itF = mp.keySet().iterator();
-                        while(itF.hasNext()){
-                            String key2= itF.next();
-                            if(!finalHashMap.containsKey(key2)){
-                                Element keyElement = mp.get(key2);
-                                finalHashMap.put(key2,keyElement);
-                                System.out.println("Key added: "+key2+" : "+keyElement.getValue());
+                        if(!u1.fail) {//unification not failed
+                            HashMap<String, Element> mp = u1.map;
+                            System.out.println(mp.toString());
+                            Iterator<String> itF = mp.keySet().iterator();
+                            while (itF.hasNext()) {
+                                String key2 = itF.next();
+                                if (!finalHashMap.containsKey(key2)) {
+                                    Element keyElement = mp.get(key2);
+                                    finalHashMap.put(key2, keyElement);
+                                    System.out.println("Key added: " + key2 + " : " + keyElement.getValue());
+                                }
                             }
                         }
                     } catch (IOException e) {
