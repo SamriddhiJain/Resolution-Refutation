@@ -33,13 +33,13 @@ public class Main {
 //        Resolution res1 = new Resolution(l1.get(4),l1.get(1));
 //        System.out.println(res1.resolve());
 //
-        Element e = l1.get(l1.size()-1).clone();
-        l1.remove(l1.size()-1);
-        ResStrategies str = new ResStrategies();
-        str.setOfSupportStrategy(l1,e);
-
+//        Element e = l1.get(l1.size()-1).clone();
+//        l1.remove(l1.size()-1);
 //        ResStrategies str = new ResStrategies();
-//        str.unitResolution(l1);
+//        str.setOfSupportStrategy(l1,e);
+
+        ResStrategies str = new ResStrategies();
+        str.unitResolution(l1);
 
     }
 }

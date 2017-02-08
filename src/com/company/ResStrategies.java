@@ -124,4 +124,74 @@ public class ResStrategies {
         }
     }
 
+    /*Preference to unit clauses, if no other option then BFS*/
+    public void unitResolution(List<Element> kb) throws IOException {
+        List<Element> l1 = new ArrayList<>();
+        for(int i=0;i<kb.size()-1;i++){
+            for(int j=i+1;j<kb.size();j++) {
+
+                Element e1 = kb.get(i).clone();
+                Element e2 = kb.get(j).clone();
+                if(isUnitClause(e1) || isUnitClause(e2)){
+                    Resolution res = new Resolution(e1,e2);
+                    if(res.resolve()){
+                        if(res.nullFound()){
+                            System.out.println(l1.size() + " new clauses");
+                            return;
+                        }else{
+                            Element e = res.getFinalResolved();
+                            if(!kb.contains(e))
+                                l1.add(e);
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println(l1.size()+" new clauses");
+
+        List<Element> l2 = new ArrayList<>();
+        while (true){
+            for(int i=0;i<kb.size();i++){
+                for(int j=0;j<l1.size();j++) {
+                    Element e1 = kb.get(i).clone();
+                    Element e2 = l1.get(j).clone();
+                    if(isUnitClause(e1) || isUnitClause(e2)) {
+                        Resolution res = new Resolution(e1, e2);
+                        if (res.resolve()) {
+                            if (res.nullFound()) {
+                                System.out.println(l2.size() + " new clauses");
+                                return;
+                            } else {
+                                Element e = res.getFinalResolved();
+                                if (!kb.contains(e))
+                                    l2.add(e);
+                            }
+                        }
+                    }
+                }
+            }
+
+            System.out.println(l2.size()+" new clauses");
+
+            if(l2.size()==0 || l1.size()==0){
+                forwardChaining(kb);
+                return;
+            }else {
+                for(int i=0;i<l1.size();i++){
+                    kb.add(l1.get(i).clone());
+                }
+
+                l1= new ArrayList<>();
+                for(int i=0;i<l2.size();i++){
+                    l1.add(l2.get(i).clone());
+                }
+                l2 = new ArrayList<>();
+            }
+        }
+    }
+
+    private boolean isUnitClause(Element e2) {
+        return e2.getName().equals("Atom");
+    }
 }
