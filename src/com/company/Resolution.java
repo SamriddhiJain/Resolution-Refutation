@@ -276,8 +276,8 @@ public class Resolution {
             }
             else{
                 eResolved = combineLiterals(newList); //Combine with Or
-//                System.out.println("Resolved: ");
-//                printElement(eResolved);
+                System.out.println("Resolved: ");
+                printElement(eResolved);
                 return true;
             }
         }else return false;

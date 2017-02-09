@@ -7,6 +7,7 @@ import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import com.company.KB;
@@ -16,7 +17,7 @@ public class Main {
     public static void main(String[] args) throws JDOMException, IOException {
 
 
-        File inputFile = new File("blocks.txt");
+        File inputFile = new File("Queries/test.txt");
         SAXBuilder saxBuilder = new SAXBuilder();
         Document document = saxBuilder.build(inputFile);
         Element root = document.getRootElement();
@@ -24,8 +25,8 @@ public class Main {
         KB newKB = new KB();
         List<Element> l1 = newKB.readKB(root);
 
-//        Resolution res = new Resolution(l1.get(0),l1.get(2));
-//        System.out.println(res.resolve());
+        Resolution res = new Resolution(l1.get(0),l1.get(1));
+        System.out.println(res.resolve());
 
 //        Unification u1 = new Unification();
 //        u1.unification("file1.txt","file2.txt");
@@ -38,8 +39,15 @@ public class Main {
 //        ResStrategies str = new ResStrategies();
 //        str.setOfSupportStrategy(l1,e);
 
-        ResStrategies str = new ResStrategies();
-        str.unitResolution(l1);
+//        ResStrategies str = new ResStrategies();
+//        str.unitResolution(l1);
+//
+        AnsStrategies str = new AnsStrategies();
+//        str.changeVariables(l1.get(0),l1.get(1));
+//        str.printElement(l1.get(1));
+        str.forwardChaining(l1);
+
+
 
     }
 }
