@@ -20,6 +20,7 @@ public class AnsStrategies {
         List<Element> l1 = new ArrayList<>();
         for(int i=0;i<kb.size()-1;i++){
             for(int j=i+1;j<kb.size();j++) {
+//                changeVariables(kb.get(i).clone(), kb.get(j).clone());
                 Resolution res = new Resolution(kb.get(i).clone(), kb.get(j).clone());
                 if(res.resolve()) {
                     Element e = res.getFinalResolved().clone();
@@ -110,39 +111,5 @@ public class AnsStrategies {
         XMLOutputter outp = new XMLOutputter();
         outp.setFormat(Format.getPrettyFormat());
         System.out.println(outp.outputString(e));
-    }
-
-    /*Change the common variables of two clauses
-    * Deep copy: e2 is automatically updated.
-    * */
-    public void changeVariables(Element e1, Element e2){
-        HashMap<String,Boolean> mp = new HashMap<>();
-        fillHashTablewithVar(e1,mp);
-        replaceElementWithValues(e2,mp);
-    }
-
-    private void replaceElementWithValues(Element pat, HashMap<String, Boolean> mp) {
-        if(pat.getName().equals("Var") && mp.containsKey(pat.getValue())){
-            String str = pat.getValue()+"1";
-            pat.setText(str);
-        }
-        else{
-            List<Element> Children =  pat.getChildren();
-            for(int i=0;i<Children.size();++i){
-                replaceElementWithValues(Children.get(i),mp);
-            }
-        }
-    }
-
-    private void fillHashTablewithVar(Element pat, HashMap<String, Boolean> mp) {
-        if(pat.getName().equals("Var") && !mp.containsKey(pat.getValue())){
-            mp.put(pat.getValue(),true);
-        }
-        else{
-            List<Element> Children =  pat.getChildren();
-            for(int i=0;i<Children.size();++i){
-                fillHashTablewithVar(Children.get(i),mp);
-            }
-        }
     }
 }
