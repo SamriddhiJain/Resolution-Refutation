@@ -263,8 +263,10 @@ public class Resolution {
 
             /*Substitute each literal*/
             for(int i=0;i<a;i++){
-                Element e1 = unionList.get(i).clone();
-                unionList.set(i,substituteLiteral(e1,mp));
+                for(int j=0;j<mp.keySet().size();j++) {//multiple substitutions to fix cyclic dependencies in variables
+                    Element e1 = unionList.get(i).clone();
+                    unionList.set(i, substituteLiteral(e1, mp));
+                }
             }
 
             List<Element> newList = removePairs(unionList);
@@ -358,7 +360,7 @@ public class Resolution {
         }
     }
 
-    private void printElement(Element e){
+    public void printElement(Element e){
         XMLOutputter outp = new XMLOutputter();
         outp.setFormat(Format.getPrettyFormat());
         System.out.println(outp.outputString(e));
