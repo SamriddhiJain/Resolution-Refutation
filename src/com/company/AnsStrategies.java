@@ -195,6 +195,14 @@ public class AnsStrategies {
             List<Element> l1 = e.getChildren();
             if(l1.get(0).getName().equals("Rel") && l1.get(0).getValue().equals("Answer") && !isVarInPat(l1.get(1)))
                 return true;
+        }else if(e.getName().equals("Or")){
+            List<Element> l1 = e.getChildren();
+            Boolean result = true;
+            for(int i=0;i<l1.size();i++){
+                result = result && checkAnswer(l1.get(i));
+            }
+
+            return result;
         }
         return false;
     }
