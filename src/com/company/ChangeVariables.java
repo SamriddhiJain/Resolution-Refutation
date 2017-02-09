@@ -18,7 +18,6 @@ public class ChangeVariables {
         HashMap<String,Boolean> mp = new HashMap<>();
         fillHashTablewithVar(e1,mp);
         replaceElementWithValues(e2,mp);
-        printElement(e2);
     }
 
     private void replaceElementWithValues(Element pat, HashMap<String, Boolean> mp) {

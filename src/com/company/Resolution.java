@@ -104,6 +104,9 @@ public class Resolution {
     * 3. Resolve clauses with substitution
     * */
     public boolean resolve(){
+        /*Change common variables before resolving*/
+        ChangeVariables ch = new ChangeVariables();
+        ch.changeVariables(e1,e2);
 
         int flag = 0;
 
@@ -260,8 +263,10 @@ public class Resolution {
 
             /*Substitute each literal*/
             for(int i=0;i<a;i++){
-                Element e1 = unionList.get(i).clone();
-                unionList.set(i,substituteLiteral(e1,mp));
+                for(int j=0;j<mp.keySet().size();j++) {//multiple substitutions to fix cyclic dependencies in variables
+                    Element e1 = unionList.get(i).clone();
+                    unionList.set(i, substituteLiteral(e1, mp));
+                }
             }
 
             List<Element> newList = removePairs(unionList);
@@ -276,8 +281,8 @@ public class Resolution {
             }
             else{
                 eResolved = combineLiterals(newList); //Combine with Or
-                System.out.println("Resolved: ");
-                printElement(eResolved);
+//                System.out.println("Resolved: ");
+//                printElement(eResolved);
                 return true;
             }
         }else return false;
@@ -349,15 +354,13 @@ public class Resolution {
             }
             if(Children.size()!=0) {
                 result.setContent(newChildren);
-//                printElement(result);
-//                System.out.println();
             }
 
             return result;
         }
     }
 
-    private void printElement(Element e){
+    public void printElement(Element e){
         XMLOutputter outp = new XMLOutputter();
         outp.setFormat(Format.getPrettyFormat());
         System.out.println(outp.outputString(e));
