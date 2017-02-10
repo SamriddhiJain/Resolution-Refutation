@@ -35,8 +35,6 @@ public class ResStrategies {
         }
 
         System.out.println(l1.size()+" new clauses");
-        XMLOutputter outp = new XMLOutputter();
-        outp.setFormat(Format.getPrettyFormat());
 
 //        PrintWriter writer = new PrintWriter("out.txt", "UTF-8");
 //        writer.println();
@@ -189,6 +187,54 @@ public class ResStrategies {
                 l2 = new ArrayList<>();
             }
         }
+    }
+
+    /*One of the resolvents is always from original clauses: Not complete*/
+    public void inputStrategy(List<Element> kb){
+        List<Element> goalDerivatives = new ArrayList<>();
+        List<Element> originalKB = new ArrayList<>();
+
+        //copy initial kb with negated goal
+        for(int i=0;i<kb.size();i++){
+            originalKB.add(kb.get(i).clone());
+        }
+        while (true) {
+            for (int i = 0; i < kb.size()-1; i++) {//original inputs
+                for (int j = 0; j < originalKB.size(); j++) {
+                    Resolution res = new Resolution(kb.get(i).clone(), originalKB.get(j).clone());
+                    if (res.resolve()) {
+                        if (res.nullFound()) {
+                            System.out.println(goalDerivatives.size() + " new clauses");
+                            return;
+                        } else {
+                            Element e = res.getFinalResolved();
+                            if (!kb.contains(e) && !goalDerivatives.contains(e)){
+//                                printElement(e);
+                                goalDerivatives.add(e);
+                            }
+                        }
+                    }
+                }
+            }
+
+            System.out.println(goalDerivatives.size() + " new clauses");
+            if(goalDerivatives.size()==0){
+                System.out.println("Can't predict");
+                return;
+            }else{
+                originalKB = new ArrayList<>();
+                for(int i=0;i<goalDerivatives.size();i++){
+                    originalKB.add(goalDerivatives.get(i).clone());
+                }
+                goalDerivatives = new ArrayList<>();
+            }
+        }
+    }
+
+    public void printElement(Element e){
+        XMLOutputter outp = new XMLOutputter();
+        outp.setFormat(Format.getPrettyFormat());
+        System.out.println(outp.outputString(e));
     }
 
     private boolean isUnitClause(Element e2) {
