@@ -6,6 +6,7 @@ import org.jdom2.output.XMLOutputter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -14,19 +15,27 @@ import java.util.List;
 public class AnsStrategies {
     /*Brute force matching, needs optimisation*/
     public Element forwardChaining(List<Element> kb) throws IOException {
+        HashMap<String,Boolean> kbMap = new HashMap<>();
+        for(int i=0;i<kb.size();i++){
+            String str = elementAsString(kb.get(i));
+            if(!kbMap.containsKey(str))
+                kbMap.put(str,true);
+        }
+
         List<Element> l1 = new ArrayList<>();
         for(int i=0;i<kb.size()-1;i++){
             for(int j=i+1;j<kb.size();j++) {
                 Resolution res = new Resolution(kb.get(i).clone(), kb.get(j).clone());
                 if(res.resolve()) {
                     Element e = res.getFinalResolved().clone();
-                    if (!kb.contains(e)){
+                    if(!kbMap.containsKey(elementAsString(e))) {
                         if(checkAnswer(e)) {
                             System.out.println(l1.size() + " new clauses");
-                            printElement(e);
+                            System.out.println(elementAsString(e));
                             return e;
                         }
                         l1.add(e);
+                        kbMap.put(elementAsString(e),true);
                     }
                 }
             }
@@ -41,13 +50,14 @@ public class AnsStrategies {
                     Resolution res = new Resolution(kb.get(i).clone(), l1.get(j).clone());
                     if(res.resolve()){
                         Element e = res.getFinalResolved().clone();
-                        if (!kb.contains(e)){
-                            if(checkAnswer(e)) {//Answer tag with no variable
+                        if(!kbMap.containsKey(elementAsString(e))) {
+                            if(checkAnswer(e)) {
                                 System.out.println(l2.size() + " new clauses");
-                                printElement(e);
+                                System.out.println(elementAsString(e));
                                 return e;
                             }
                             l2.add(e);
+                            kbMap.put(elementAsString(e),true);
                         }
                     }
                 }
@@ -74,10 +84,15 @@ public class AnsStrategies {
 
     /*One of the resolvents is always in negated goal set or its derivative*/
     public Element setOfSupportStrategy(List<Element> kb,Element g){
+        HashMap<String,Boolean> kbMap = new HashMap<>();
+        for(int i=0;i<kb.size();i++){
+            String str = elementAsString(kb.get(i));
+            if(!kbMap.containsKey(str))
+                kbMap.put(str,true);
+        }
+
         List<Element> negatedGoal = new ArrayList<>();
-        List<Element> goalDerivatives = new ArrayList<>();
         negatedGoal.add(g.clone());
-        goalDerivatives.add(g.clone());
 
         List<Element> l1 = new ArrayList<>();
         while (true) {
@@ -86,14 +101,14 @@ public class AnsStrategies {
                     Resolution res = new Resolution(kb.get(i).clone(), negatedGoal.get(j).clone());
                     if (res.resolve()) {
                         Element e = res.getFinalResolved();
-                        if (!kb.contains(e) && !goalDerivatives.contains(e)){
-                            if(checkAnswer(e)) {//Answer tag with no variable
+                        if(!kbMap.containsKey(elementAsString(e))) {
+                            if(checkAnswer(e)) {
                                 System.out.println(l1.size() + " new clauses");
-                                printElement(e);
+                                System.out.println(elementAsString(e));
                                 return e;
                             }
                             l1.add(e);
-                            goalDerivatives.add(e);
+                            kbMap.put(elementAsString(e),true);
                         }
                     }
                 }
@@ -104,11 +119,10 @@ public class AnsStrategies {
                 System.out.println("Can't predict");
                 return null;
             }else {
-                for(int i=0;i<negatedGoal.size();i++){
-                    kb.add(negatedGoal.get(i).clone());
+                for(int i=0;i<l1.size();i++){
+                    kb.add(l1.get(i).clone());
                 }
 
-                negatedGoal = new ArrayList<>();
                 for(int i=0;i<l1.size();i++){
                     negatedGoal.add(l1.get(i).clone());
                 }
@@ -119,6 +133,13 @@ public class AnsStrategies {
 
     /*Preference to unit clauses, if no other option then BFS*/
     public Element unitResolution(List<Element> kb) throws IOException {
+        HashMap<String,Boolean> kbMap = new HashMap<>();
+        for(int i=0;i<kb.size();i++){
+            String str = elementAsString(kb.get(i));
+            if(!kbMap.containsKey(str))
+                kbMap.put(str,true);
+        }
+
         List<Element> l1 = new ArrayList<>();
         for(int i=0;i<kb.size()-1;i++){
             for(int j=i+1;j<kb.size();j++) {
@@ -129,13 +150,14 @@ public class AnsStrategies {
                     Resolution res = new Resolution(e1,e2);
                     if(res.resolve()){
                         Element e = res.getFinalResolved().clone();
-                        if (!kb.contains(e)){
+                        if(!kbMap.containsKey(elementAsString(e))) {
                             if(checkAnswer(e)) {
                                 System.out.println(l1.size() + " new clauses");
-                                printElement(e);
+                                System.out.println(elementAsString(e));
                                 return e;
                             }
                             l1.add(e);
+                            kbMap.put(elementAsString(e),true);
                         }
                     }
                 }
@@ -154,13 +176,14 @@ public class AnsStrategies {
                         Resolution res = new Resolution(e1, e2);
                         if (res.resolve()) {
                             Element e = res.getFinalResolved().clone();
-                            if (!kb.contains(e)){
+                            if(!kbMap.containsKey(elementAsString(e))) {
                                 if(checkAnswer(e)) {
                                     System.out.println(l2.size() + " new clauses");
-                                    printElement(e);
+                                    System.out.println(elementAsString(e));
                                     return e;
                                 }
                                 l2.add(e);
+                                kbMap.put(elementAsString(e),true);
                             }
                         }
                     }
@@ -187,6 +210,13 @@ public class AnsStrategies {
 
     /*One of the resolvents is always from original clauses: Not complete*/
     public Element inputStrategy(List<Element> kb){
+        HashMap<String,Boolean> kbMap = new HashMap<>();
+        for(int i=0;i<kb.size();i++){
+            String str = elementAsString(kb.get(i));
+            if(!kbMap.containsKey(str))
+                kbMap.put(str,true);
+        }
+
         List<Element> goalDerivatives = new ArrayList<>();
         List<Element> originalKB = new ArrayList<>();
 
@@ -200,13 +230,14 @@ public class AnsStrategies {
                     Resolution res = new Resolution(kb.get(i).clone(), originalKB.get(j).clone());
                     if (res.resolve()) {
                         Element e = res.getFinalResolved();
-                        if (!kb.contains(e) && !goalDerivatives.contains(e)){
-                            if(checkAnswer(e)) {//Answer tag with no variable
+                        if(!kbMap.containsKey(elementAsString(e))) {
+                            if(checkAnswer(e)) {
                                 System.out.println(goalDerivatives.size() + " new clauses");
-                                printElement(e);
+                                System.out.println(elementAsString(e));
                                 return e;
                             }
                             goalDerivatives.add(e);
+                            kbMap.put(elementAsString(e),true);
                         }
                     }
                 }
@@ -265,9 +296,9 @@ public class AnsStrategies {
         }
     }
 
-    public void printElement(Element e){
+    public String elementAsString(Element e){
         XMLOutputter outp = new XMLOutputter();
         outp.setFormat(Format.getPrettyFormat());
-        System.out.println(outp.outputString(e));
+        return outp.outputString(e);
     }
 }

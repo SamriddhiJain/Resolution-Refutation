@@ -1,5 +1,3 @@
 Check logic for multiple substitutions: True/False tag
 Add more strategies
 Check logic for multiple answers
-
-FIX BUG: check and modify kb.contains()
