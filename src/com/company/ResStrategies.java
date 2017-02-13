@@ -30,6 +30,7 @@ public class ResStrategies {
                 if(res.resolve()){
                     if(res.nullFound()){
                         System.out.println(l1.size() + " new clauses");
+                        System.out.println("Null clause found while resolving");
                         return;
                     }else{
                         Element e = res.getFinalResolved();
@@ -52,6 +53,7 @@ public class ResStrategies {
                     if(res.resolve()){
                         if(res.nullFound()){
                             System.out.println(l2.size() + " new clauses");
+                            System.out.println("Null clause found while resolving");
                             return;
                         }else{
                             Element e = res.getFinalResolved();
@@ -103,6 +105,7 @@ public class ResStrategies {
                     if (res.resolve()) {
                         if (res.nullFound()) {
                             System.out.println(l1.size() + " new clauses");
+                            System.out.println("Null clause found while resolving");
                             return;
                         } else {
                             Element e = res.getFinalResolved();
@@ -150,6 +153,7 @@ public class ResStrategies {
                     if(res.resolve()){
                         if(res.nullFound()){
                             System.out.println(l1.size() + " new clauses");
+                            System.out.println("Null clause found while resolving");
                             return;
                         }else{
                             Element e = res.getFinalResolved();
@@ -176,6 +180,7 @@ public class ResStrategies {
                         if (res.resolve()) {
                             if (res.nullFound()) {
                                 System.out.println(l2.size() + " new clauses");
+                                System.out.println("Null clause found while resolving");
                                 return;
                             } else {
                                 Element e = res.getFinalResolved();
@@ -231,6 +236,7 @@ public class ResStrategies {
                     if (res.resolve()) {
                         if (res.nullFound()) {
                             System.out.println(goalDerivatives.size() + " new clauses");
+                            System.out.println("Null clause found while resolving");
                             return;
                         } else {
                             Element e = res.getFinalResolved();
