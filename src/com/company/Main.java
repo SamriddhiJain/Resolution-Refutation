@@ -7,27 +7,78 @@ import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-
-import com.company.KB;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws JDOMException, IOException {
 
+        System.out.print("Please enter the KB filePath: ");
+        Scanner sc = new Scanner(System.in);
+        String fName = sc.next();
 
-        File inputFile = new File("Queries/student.txt");
+        File inputFile = new File(fName);
         SAXBuilder saxBuilder = new SAXBuilder();
         Document document = saxBuilder.build(inputFile);
         Element root = document.getRootElement();
-
         KB newKB = new KB();
         List<Element> l1 = newKB.readKB(root);
 
+        System.out.println();
+        System.out.println("Enter the resolution type and strategy: ");
+        System.out.println("Resolution Types: ");
+        System.out.println("Resolution Refutation (1)");
+        System.out.println("Query Answering (2)");
+        int resType = sc.nextInt();
+
+        System.out.println("Resolution Strategy: ");
+        System.out.println("Brute Force Matching (1)");
+        System.out.println("Set of Support (2)");
+        System.out.println("Unit Resolution (3)");
+        System.out.println("Input Strategy (4)");
+        int resStrategy = sc.nextInt();
+
+        if(resType==1){//null clause found
+            ResStrategies strategy = new ResStrategies();
+
+            if(resStrategy==1){
+                strategy.forwardChaining(l1);
+            }else if(resStrategy==2){
+                Element e = l1.get(l1.size()-1).clone();
+                l1.remove(l1.size()-1);
+                strategy.setOfSupportStrategy(l1,e);
+            }else if(resStrategy==3){
+                strategy.unitResolution(l1);
+            }else if(resStrategy==4){
+                strategy.inputStrategy(l1);
+            }else{
+                System.out.println("Please enter a valid resolution strategy");
+            }
+        }else if(resType==2){//answer predicate
+            AnsStrategies strategy = new AnsStrategies();
+
+            if(resStrategy==1){
+                strategy.forwardChaining(l1);
+            }else if(resStrategy==2){
+                Element e = l1.get(l1.size()-1).clone();
+                l1.remove(l1.size()-1);
+                strategy.setOfSupportStrategy(l1,e);
+            }else if(resStrategy==3){
+                strategy.unitResolution(l1);
+            }else if(resStrategy==4){
+                strategy.inputStrategy(l1);
+            }else{
+                System.out.println("Please enter a valid resolution strategy");
+            }
+        }else{
+            System.out.println("Please enter a valid resolution type");
+        }
+
 
 //        ResStrategies str = new ResStrategies();
-//        str.forwardChaining(l1);
+//        str.unitResolution(l1);
+//        System.out.println(l1.get(0).equals(l1.get(0).clone()));
 
 
 //        Resolution res = new Resolution(l1.get(0),l1.get(1));
@@ -51,8 +102,8 @@ public class Main {
 //        l1.remove(l1.size()-1);
 //        AnsStrategies str = new AnsStrategies();
 //        str.setOfSupportStrategy(l1,e);
-        AnsStrategies str = new AnsStrategies();
-        str.unitResolution(l1);
+//        AnsStrategies str = new AnsStrategies();
+//        str.inputStrategy(l1);
 //        System.out.println(str.forwardChaining(l1));
 
 
