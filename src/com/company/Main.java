@@ -1,5 +1,8 @@
 package com.company;
 
+import javafx.util.Pair;
+import org.graphstream.graph.*;
+import org.graphstream.graph.implementations.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -7,6 +10,8 @@ import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,6 +29,10 @@ public class Main {
         Element root = document.getRootElement();
         KB newKB = new KB();
         List<Element> l1 = newKB.readKB(root);
+        List<Element> origKB = new ArrayList<>();
+        for(int i=0;i<l1.size();i++){
+            origKB.add(l1.get(i).clone());
+        }
 
         System.out.println();
         System.out.println("Enter the resolution type and strategy: ");
@@ -43,7 +52,9 @@ public class Main {
             ResStrategies strategy = new ResStrategies();
 
             if(resStrategy==1){
-                strategy.forwardChaining(l1);
+                List<Pair<Pair<String, String>, String>> fList = strategy.forwardChaining(l1);
+                Visualisation v1 = new Visualisation();
+                v1.visualise(origKB,fList);
             }else if(resStrategy==2){
                 Element e = l1.get(l1.size()-1).clone();
                 l1.remove(l1.size()-1);
@@ -75,7 +86,8 @@ public class Main {
             System.out.println("Please enter a valid resolution type");
         }
 
-
+//
+//
 //        ResStrategies str = new ResStrategies();
 //        str.unitResolution(l1);
 //        System.out.println(l1.get(0).equals(l1.get(0).clone()));
