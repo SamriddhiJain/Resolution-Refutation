@@ -16,7 +16,7 @@ import java.util.List;
 public class ResStrategies {
     /*Brute force matching, needs optimisation*/
     public List<Pair<Pair<String, String>, String>> forwardChaining(List<Element> kb) throws IOException {
-        List<Pair<Pair<String,String>,String>> fL =new ArrayList<>();
+        List<Pair<Pair<String,String>,String>> fL =new ArrayList<>(); //holds final resolvents
         HashMap<String,Boolean> kbMap = new HashMap<>();
         for(int i=0;i<kb.size();i++){
             String str = elementAsString(kb.get(i));
@@ -95,7 +95,8 @@ public class ResStrategies {
     }
 
     /*One of the resolvents is always in negated goal set or its derivative*/
-    public void setOfSupportStrategy(List<Element> kb,Element g){
+    public List<Pair<Pair<String, String>, String>> setOfSupportStrategy(List<Element> kb, Element g){
+        List<Pair<Pair<String,String>,String>> fL =new ArrayList<>();
         HashMap<String,Boolean> kbMap = new HashMap<>();
         for(int i=0;i<kb.size();i++){
             String str = elementAsString(kb.get(i));
@@ -113,12 +114,16 @@ public class ResStrategies {
                     Resolution res = new Resolution(kb.get(i).clone(), negatedGoal.get(j).clone());
                     if (res.resolve()) {
                         if (res.nullFound()) {
+                            fL.add(new Pair<>(new Pair<>(elementAsString(kb.get(i)),elementAsString(negatedGoal.get(j))),
+                                    "Null"));
                             System.out.println(l1.size() + " new clauses");
                             System.out.println("Null clause found while resolving");
-                            return;
+                            return fL;
                         } else {
                             Element e = res.getFinalResolved();
                             if(!kbMap.containsKey(elementAsString(e))) {
+                                fL.add(new Pair<>(new Pair<>(elementAsString(kb.get(i)),elementAsString(negatedGoal.get(j))),
+                                        elementAsString(e)));
                                 l1.add(e);
                                 kbMap.put(elementAsString(e),true);
                             }
@@ -130,7 +135,7 @@ public class ResStrategies {
             System.out.println(l1.size() + " new clauses");
             if(l1.size()==0){
                 System.out.println("Can't predict");
-                return;
+                return fL;
             }else {
                 for(int i=0;i<l1.size();i++){
                     kb.add(l1.get(i).clone());
@@ -144,7 +149,8 @@ public class ResStrategies {
     }
 
     /*Preference to unit clauses, if no other option then BFS*/
-    public void unitResolution(List<Element> kb) throws IOException {
+    public List<Pair<Pair<String, String>, String>> unitResolution(List<Element> kb) throws IOException {
+        List<Pair<Pair<String,String>,String>> fL =new ArrayList<>();
         HashMap<String,Boolean> kbMap = new HashMap<>();
         for(int i=0;i<kb.size();i++){
             String str = elementAsString(kb.get(i));
@@ -161,12 +167,16 @@ public class ResStrategies {
                     Resolution res = new Resolution(e1,e2);
                     if(res.resolve()){
                         if(res.nullFound()){
+                            fL.add(new Pair<>(new Pair<>(elementAsString(kb.get(i)),elementAsString(kb.get(j))),
+                                    "Null"));
                             System.out.println(l1.size() + " new clauses");
                             System.out.println("Null clause found while resolving");
-                            return;
+                            return fL;
                         }else{
                             Element e = res.getFinalResolved();
                             if(!kbMap.containsKey(elementAsString(e))) {
+                                fL.add(new Pair<>(new Pair<>(elementAsString(kb.get(i)),elementAsString(kb.get(j))),
+                                        elementAsString(e)));
                                 l1.add(e);
                                 kbMap.put(elementAsString(e),true);
                             }
@@ -188,12 +198,16 @@ public class ResStrategies {
                         Resolution res = new Resolution(e1, e2);
                         if (res.resolve()) {
                             if (res.nullFound()) {
+                                fL.add(new Pair<>(new Pair<>(elementAsString(kb.get(i)),elementAsString(l1.get(j))),
+                                        "Null"));
                                 System.out.println(l2.size() + " new clauses");
                                 System.out.println("Null clause found while resolving");
-                                return;
+                                return fL;
                             } else {
                                 Element e = res.getFinalResolved();
                                 if(!kbMap.containsKey(elementAsString(e))) {
+                                    fL.add(new Pair<>(new Pair<>(elementAsString(kb.get(i)),elementAsString(l1.get(j))),
+                                            elementAsString(e)));
                                     l2.add(e);
                                     kbMap.put(elementAsString(e),true);
                                 }
@@ -206,8 +220,9 @@ public class ResStrategies {
             System.out.println(l2.size()+" new clauses");
 
             if(l2.size()==0 || l1.size()==0){
-                forwardChaining(kb);
-                return;
+//                List<Pair<Pair<String,String>,String>> fl2 = forwardChaining(kb);
+//                fL.addAll(fl2);
+                return fL;
             }else {
                 for(int i=0;i<l1.size();i++){
                     kb.add(l1.get(i).clone());
@@ -223,7 +238,8 @@ public class ResStrategies {
     }
 
     /*One of the resolvents is always from original clauses: Not complete*/
-    public void inputStrategy(List<Element> kb){
+    public List<Pair<Pair<String, String>, String>> inputStrategy(List<Element> kb){
+        List<Pair<Pair<String,String>,String>> fL =new ArrayList<>();
         HashMap<String,Boolean> kbMap = new HashMap<>();
         for(int i=0;i<kb.size();i++){
             String str = elementAsString(kb.get(i));
@@ -244,12 +260,16 @@ public class ResStrategies {
                     Resolution res = new Resolution(kb.get(i).clone(), originalKB.get(j).clone());
                     if (res.resolve()) {
                         if (res.nullFound()) {
+                            fL.add(new Pair<>(new Pair<>(elementAsString(kb.get(i)),elementAsString(originalKB.get(j))),
+                                    "Null"));
                             System.out.println(goalDerivatives.size() + " new clauses");
                             System.out.println("Null clause found while resolving");
-                            return;
+                            return fL;
                         } else {
                             Element e = res.getFinalResolved();
                             if(!kbMap.containsKey(elementAsString(e))) {
+                                fL.add(new Pair<>(new Pair<>(elementAsString(kb.get(i)),elementAsString(originalKB.get(j))),
+                                        elementAsString(e)));
                                 goalDerivatives.add(e);
                                 kbMap.put(elementAsString(e),true);
                             }
@@ -261,7 +281,7 @@ public class ResStrategies {
             System.out.println(goalDerivatives.size() + " new clauses");
             if(goalDerivatives.size()==0){
                 System.out.println("Can't predict");
-                return;
+                return fL;
             }else{
                 originalKB = new ArrayList<>();
                 for(int i=0;i<goalDerivatives.size();i++){

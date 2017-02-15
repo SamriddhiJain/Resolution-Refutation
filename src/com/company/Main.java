@@ -47,25 +47,29 @@ public class Main {
         System.out.println("Unit Resolution (3)");
         System.out.println("Input Strategy (4)");
         int resStrategy = sc.nextInt();
+        List<Pair<Pair<String, String>, String>> fList = new ArrayList<>();
 
         if(resType==1){//null clause found
             ResStrategies strategy = new ResStrategies();
 
             if(resStrategy==1){
-                List<Pair<Pair<String, String>, String>> fList = strategy.forwardChaining(l1);
-                Visualisation v1 = new Visualisation();
-                v1.visualise(origKB,fList);
+                fList = strategy.forwardChaining(l1);
             }else if(resStrategy==2){
                 Element e = l1.get(l1.size()-1).clone();
                 l1.remove(l1.size()-1);
-                strategy.setOfSupportStrategy(l1,e);
+                fList = strategy.setOfSupportStrategy(l1,e);
             }else if(resStrategy==3){
-                strategy.unitResolution(l1);
+                fList = strategy.unitResolution(l1);
             }else if(resStrategy==4){
-                strategy.inputStrategy(l1);
+                fList = strategy.inputStrategy(l1);
             }else{
                 System.out.println("Please enter a valid resolution strategy");
+                return;
             }
+
+            Visualisation v1 = new Visualisation();
+            v1.visualise(origKB,fList);
+
         }else if(resType==2){//answer predicate
             AnsStrategies strategy = new AnsStrategies();
 
