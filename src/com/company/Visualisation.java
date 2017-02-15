@@ -49,8 +49,8 @@ public class Visualisation {
 
         for(int i=0;i<l1.size();i++){
             Pair<Pair<String, String>, String> p = l1.get(i);
-            graph.addEdge(Integer.toString(i),p.getKey().getValue(),p.getValue());
-            graph.addEdge(Integer.toString(i)+"a",p.getKey().getKey(),p.getValue());
+            graph.addEdge(Integer.toString(i),p.getKey().getValue(),p.getValue(),true);
+            graph.addEdge(Integer.toString(i)+"a",p.getKey().getKey(),p.getValue(),true);
         }
 
         for (Node node : graph) {
