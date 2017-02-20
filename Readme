@@ -1,0 +1,6 @@
+This project implements few strategies for the resolution refutation method.
+It takes the input knowledge base as a Rule ML file.
+
+Before running the project, you will need to install these,
+1. http://www.jdom.org/downloads/, for the XML Rule-ML like format for KB.
+2. http://graphstream-project.org/download/, for visualising the resolvents.
