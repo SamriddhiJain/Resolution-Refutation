@@ -1,6 +1,12 @@
-This project implements few strategies for the resolution refutation method.
-It takes the input knowledge base as a Rule ML file.
+This project implements the following strategies for the resolution refutation:
+1. Simple Brute Force (extensive matching)
+2. Set of Support Strategy
+3. Input Strategy
+4. Unit Resolution
 
-Before running the project, you will need to install these,
+The project takes the input knowledge base as a Rule ML file and applies the strategy asked by user, and visualises the new resolvents in the form of a graph.
+The project also supports query answer predicates and can be used for building a domain dependent query bot.
+
+Before running the project, you will need these,
 1. http://www.jdom.org/downloads/, for the XML Rule-ML like format for KB.
 2. http://graphstream-project.org/download/, for visualising the resolvents.
