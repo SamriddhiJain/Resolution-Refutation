@@ -1,8 +1,6 @@
 package com.company;
 
 import javafx.util.Pair;
-import org.graphstream.graph.*;
-import org.graphstream.graph.implementations.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -11,7 +9,6 @@ import org.jdom2.input.SAXBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 

@@ -220,8 +220,8 @@ public class ResStrategies {
             System.out.println(l2.size()+" new clauses");
 
             if(l2.size()==0 || l1.size()==0){
-//                List<Pair<Pair<String,String>,String>> fl2 = forwardChaining(kb);
-//                fL.addAll(fl2);
+                List<Pair<Pair<String,String>,String>> fl2 = forwardChaining(kb);
+                fL.addAll(fl2);
                 return fL;
             }else {
                 for(int i=0;i<l1.size();i++){

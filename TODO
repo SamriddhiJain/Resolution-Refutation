@@ -2,4 +2,4 @@ Check logic for multiple substitutions: True/False tag
 Add more strategies
 Check logic for multiple answers
 
-Add visualisations
+Separate goal from KB, support multiple goals
